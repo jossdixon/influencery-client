@@ -19,7 +19,7 @@ const InfluencerCard = ({ influencer }) => {
         <CardFields>{influencer?.handle}</CardFields>
         {/* Adding the primary tag */}
         <FieldTitle>Primary Tag</FieldTitle>
-        <CardFields>{influencer?.primary_tag}</CardFields>
+        <CardFields>{influencer?.primary_tag?.name}</CardFields>
         {/* Renaming "Tags" to "Secondary Tags" */}
         <FieldTitle>Secondary Tags</FieldTitle>
         <TagContainer>

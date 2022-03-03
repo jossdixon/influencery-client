@@ -47,7 +47,13 @@ const InfluencerSearch = () => {
       <SearchContainer>
         {!influencers && <Loader />}
         <div>
-          {influencers?.map((inf, i) => (
+          {influencers?.filter((inf) => {
+            if (!searchString) {
+              return inf
+            } else if (inf.handle.toLowerCase().includes(searchString.toLowerCase())) {
+              return inf
+            }
+          }).map((inf, i) => (
             <InfluencerCard influencer={inf} key={"inf_card_" + i} />
           ))}
         </div>
