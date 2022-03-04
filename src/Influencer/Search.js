@@ -33,7 +33,6 @@ const InfluencerSearch = () => {
   }
 
   const filteredInfluencers = (inf) => {
-    // const sortedInfluencers = (sortInput === 'asc') ? sortFollowersByAsc(inf) : sortFollowersByDesc(inf);
     if (!searchString && platformString === 'all'){
       return inf;
     } else if (!searchString && platformString !== 'all') {
@@ -43,15 +42,16 @@ const InfluencerSearch = () => {
       return platformResult;
     } else {
       const filterResult = inf.filter((i) => {
-      return (compareTags(i.tags, searchString) ||
-      compareValues(i.handle, searchString) ||
+      return (compareValues(i.handle, searchString) ||
       compareValues(i.primary_tag.name, searchString) ||
+      compareTags(i.tags, searchString) ||
       compareValues(i.platform.name, searchString)) &&
       compareValues(i.platform.name, platformString)
       })
       return filterResult;
     }
   }
+
 
   return (
     <div>

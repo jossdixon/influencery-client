@@ -40,7 +40,7 @@ const Card = styled.div`
   width: 200px;
   display: inline-block;
   position: relative;
-  height: 330px;
+  min-height: fit-content;
   overflow: hidden;
 `;
 
