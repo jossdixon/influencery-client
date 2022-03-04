@@ -29,7 +29,7 @@ const InfluencerSearch = () => {
   const compareTags = (tags, string) => {
     const tagsArray = tags.map(tag => tag.name);
     const tagsFilter = tagsArray.filter(tag => tag.includes(string.toLowerCase()));
-    return tagsFilter.length > 0;
+      return tagsFilter.length > 0;
   }
 
   const filteredInfluencers = (inf) => {
@@ -41,14 +41,15 @@ const InfluencerSearch = () => {
     })
       return platformResult;
     } else {
-      const filterResult = inf.filter((i) => {
-      return (compareValues(i.handle, searchString) ||
-      compareValues(i.primary_tag.name, searchString) ||
-      compareTags(i.tags, searchString) ||
-      compareValues(i.platform.name, searchString)) &&
-      compareValues(i.platform.name, platformString)
-      })
-      return filterResult;
+        const filterResult = inf.filter((i) => {
+          return (
+            compareValues(i.handle, searchString) ||
+            compareValues(i.primary_tag.name, searchString) ||
+            compareTags(i.tags, searchString) ||
+            compareValues(i.platform.name, searchString)) &&
+            compareValues(i.platform.name, platformString)
+        })
+        return filterResult;
     }
   }
 
