@@ -7,7 +7,6 @@ const InfluencerSearch = () => {
   const [searchString, setSearchString] = useState("");
   const [platformString, setPlatformString] = useState("all");
   const [sortInput, setSortInput] = useState("desc");
-  const [filtrInf, setFiltrInf] = useState(null);
 
   useEffect(() => {
     getInfluencers();
@@ -31,6 +30,27 @@ const InfluencerSearch = () => {
     const tagsArray = tags.map(tag => tag.name);
     const tagsFilter = tagsArray.filter(tag => tag.includes(string.toLowerCase()));
     return tagsFilter.length > 0;
+  }
+
+  const filteredInfluencers = (inf) => {
+    // const sortedInfluencers = (sortInput === 'asc') ? sortFollowersByAsc(inf) : sortFollowersByDesc(inf);
+    if (!searchString && platformString === 'all'){
+      return inf;
+  } else if (!searchString && platformString !== 'all') {
+    const platformResult = inf.filter((i) => {
+      return compareValues(i.platform.name, platformString)
+    })
+      return platformResult;
+  } else {
+      const filterResult = inf.filter((i) => {
+      return (compareTags(i.tags, searchString) ||
+      compareValues(i.handle, searchString) ||
+      compareValues(i.primary_tag.name, searchString) ||
+      compareValues(i.platform.name, searchString)) &&
+      compareValues(i.platform.name, platformString)
+      })
+      return filterResult;
+    }
   }
 
   return (
@@ -68,19 +88,12 @@ const InfluencerSearch = () => {
       <SearchContainer>
         {!influencers && <Loader />}
         <div>
-          {influencers?.filter((inf) => {
-            if (!searchString && platformString === 'all') {
-              return inf;
-            } else if (!searchString && platformString !== 'all') {
-              return inf.platform.name.includes(platformString);
-            } else if (compareTags(inf.tags, searchString) ||
-              compareValues(inf.handle, searchString) ||
-              compareValues(inf.primary_tag.name, searchString) ||
-              compareValues(inf.platform.name, searchString)
-            ) {
-              return inf;
-            }
-          }).sort((a, b) => (a.followers > b.followers) ? 1 : -1).map((inf, i) => (
+          {filteredInfluencers(influencers)?.sort((a, b) =>
+            { if (sortInput === 'desc') {
+              return a.followers > b.followers ? -1 : 1
+            } else {
+              return a.followers > b.followers ? 1 : -1
+            }}).map((inf, i) => (
             <InfluencerCard influencer={inf} key={"inf_card_" + i} />
           ))}
         </div>
