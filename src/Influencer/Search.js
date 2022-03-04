@@ -6,10 +6,12 @@ const InfluencerSearch = () => {
   const [influencers, setInfluencers] = useState(null);
   const [searchString, setSearchString] = useState("");
   const [platformString, setPlatformString] = useState("all");
+  const [sortInput, setSortInput] = useState("desc");
+  const [filtrInf, setFiltrInf] = useState(null);
 
   useEffect(() => {
     getInfluencers();
-  }, []);
+  });
 
   const getInfluencers = () =>
     fetch("http://localhost:3000/api/v1/influencers", {
@@ -30,21 +32,6 @@ const InfluencerSearch = () => {
     const tagsFilter = tagsArray.filter(tag => tag.includes(string.toLowerCase()));
     return tagsFilter.length > 0;
   }
-
-  const filtrInfluencers = influencers?.filter((inf) => {
-    if (!searchString && platformString === 'all') {
-      return inf;
-    } else if (!searchString && platformString !== 'all') {
-      return inf.platform.name.includes(platformString);
-    } else if (compareTags(inf.tags, searchString) ||
-      compareValues(inf.handle, searchString) ||
-      compareValues(inf.primary_tag.name, searchString) ||
-      compareValues(inf.platform.name, searchString)
-    ) {
-      return inf;
-    }
-  })
-
 
   return (
     <div>
@@ -68,11 +55,32 @@ const InfluencerSearch = () => {
           <option value="tiktok">Tik-Tok</option>
           <option value="youtube">Youtube</option>
         </SelectInput>
+        <SelectInput
+          value={sortInput}
+          onChange={(e) => setSortInput(e.target.value)}
+          name="followers"
+          id="followers"
+        >
+          <option value="desc">Followers High-Low</option>
+          <option value="asc">Followers Low-High</option>
+        </SelectInput>
       </SearchInputContainer>
       <SearchContainer>
         {!influencers && <Loader />}
         <div>
-         {filtrInfluencers.map((inf, i) => (
+          {influencers?.filter((inf) => {
+            if (!searchString && platformString === 'all') {
+              return inf;
+            } else if (!searchString && platformString !== 'all') {
+              return inf.platform.name.includes(platformString);
+            } else if (compareTags(inf.tags, searchString) ||
+              compareValues(inf.handle, searchString) ||
+              compareValues(inf.primary_tag.name, searchString) ||
+              compareValues(inf.platform.name, searchString)
+            ) {
+              return inf;
+            }
+          }).sort((a, b) => (a.followers > b.followers) ? 1 : -1).map((inf, i) => (
             <InfluencerCard influencer={inf} key={"inf_card_" + i} />
           ))}
         </div>
