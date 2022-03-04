@@ -23,7 +23,7 @@ const InfluencerSearch = () => {
       .then((data) => setInfluencers(data));
 
   const compareValues = (property, string) => {
-    return property.toLowerCase().includes(string.toLowerCase());
+    return string === 'all' ? true : property.toLowerCase().includes(string.toLowerCase());
   }
 
   const compareTags = (tags, string) => {
@@ -36,12 +36,12 @@ const InfluencerSearch = () => {
     // const sortedInfluencers = (sortInput === 'asc') ? sortFollowersByAsc(inf) : sortFollowersByDesc(inf);
     if (!searchString && platformString === 'all'){
       return inf;
-  } else if (!searchString && platformString !== 'all') {
-    const platformResult = inf.filter((i) => {
-      return compareValues(i.platform.name, platformString)
+    } else if (!searchString && platformString !== 'all') {
+        const platformResult = inf.filter((i) => {
+          return compareValues(i.platform.name, platformString)
     })
       return platformResult;
-  } else {
+    } else {
       const filterResult = inf.filter((i) => {
       return (compareTags(i.tags, searchString) ||
       compareValues(i.handle, searchString) ||
