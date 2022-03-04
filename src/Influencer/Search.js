@@ -21,6 +21,31 @@ const InfluencerSearch = () => {
       .then((response) => response.json())
       .then((data) => setInfluencers(data));
 
+  const compareValues = (property, string) => {
+    return property.toLowerCase().includes(string.toLowerCase());
+  }
+
+  const compareTags = (tags, string) => {
+    const tagsArray = tags.map(tag => tag.name);
+    const tagsFilter = tagsArray.filter(tag => tag.includes(string.toLowerCase()));
+    return tagsFilter.length > 0;
+  }
+
+  const filtrInfluencers = influencers?.filter((inf) => {
+    if (!searchString && platformString === 'all') {
+      return inf;
+    } else if (!searchString && platformString !== 'all') {
+      return inf.platform.name.includes(platformString);
+    } else if (compareTags(inf.tags, searchString) ||
+      compareValues(inf.handle, searchString) ||
+      compareValues(inf.primary_tag.name, searchString) ||
+      compareValues(inf.platform.name, searchString)
+    ) {
+      return inf;
+    }
+  })
+
+
   return (
     <div>
       <SearchInputContainer>
@@ -47,13 +72,7 @@ const InfluencerSearch = () => {
       <SearchContainer>
         {!influencers && <Loader />}
         <div>
-         {influencers?.filter((inf) => {
-            if (!searchString) {
-              return inf
-            } else if ((inf.platform === platformString) && (inf.handle.toLowerCase().includes(searchString.toLowerCase()))) {
-              return inf
-            }
-          }).map((inf, i) => (
+         {filtrInfluencers.map((inf, i) => (
             <InfluencerCard influencer={inf} key={"inf_card_" + i} />
           ))}
         </div>
